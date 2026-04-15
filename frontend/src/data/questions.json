@@ -1,0 +1,72 @@
+[
+  {
+    "id": "q1",
+    "question": "What experience do you have with IoT systems or embedded devices?",
+    "type": "technical",
+    "difficulty": 1,
+    "expectedKeywords": ["IoT", "embedded", "devices", "Arduino", "microcontroller"]
+  },
+  {
+    "id": "q2",
+    "question": "Describe a programming project where you solved a complex problem.",
+    "type": "technical",
+    "difficulty": 2,
+    "expectedKeywords": ["debug", "optimize", "algorithm", "solution"]
+  },
+  {
+    "id": "q3",
+    "question": "How do you approach learning a new technology?",
+    "type": "behavioral",
+    "difficulty": 2,
+    "expectedKeywords": ["documentation", "practice", "community", "experiment"]
+  },
+  {
+    "id": "q4",
+    "question": "Tell us about a time you debugged a difficult hardware or software issue.",
+    "type": "technical",
+    "difficulty": 3,
+    "expectedKeywords": ["debugging", "root cause", "testing", "systematic"]
+  },
+  {
+    "id": "q5",
+    "question": "How do you communicate technical concepts to non-technical people?",
+    "type": "behavioral",
+    "difficulty": 2,
+    "expectedKeywords": ["simplify", "analogies", "visual", "adapt"]
+  },
+  {
+    "id": "q6",
+    "question": "What programming languages are you most comfortable with? Why?",
+    "type": "technical",
+    "difficulty": 1,
+    "expectedKeywords": ["language", "reason", "experience", "strength"]
+  },
+  {
+    "id": "q7",
+    "question": "Describe your ideal team environment and how you collaborate.",
+    "type": "behavioral",
+    "difficulty": 2,
+    "expectedKeywords": ["communication", "collaboration", "teamwork", "respect"]
+  },
+  {
+    "id": "q8",
+    "question": "How do you handle difficult deadlines or changing requirements?",
+    "type": "behavioral",
+    "difficulty": 3,
+    "expectedKeywords": ["adapt", "priority", "communicate", "problem-solving"]
+  },
+  {
+    "id": "q9",
+    "question": "What latest technology or tool have you learned recently?",
+    "type": "technical",
+    "difficulty": 2,
+    "expectedKeywords": ["learning", "recent", "tool", "technology"]
+  },
+  {
+    "id": "q10",
+    "question": "Why are you interested in IoT and embedded systems?",
+    "type": "behavioral",
+    "difficulty": 1,
+    "expectedKeywords": ["IoT", "embedded", "interest", "passion", "career"]
+  }
+]

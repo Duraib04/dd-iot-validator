@@ -3,6 +3,7 @@
 
 import { openai, supabase } from './config.js';
 import { v4 as uuidv4 } from 'uuid';
+import questions from '../src/data/questions.json' assert { type: 'json' };
 
 const ANSWER_EVALUATOR_PROMPT = `You are a technical interview evaluator for DD IoT Solutions. 
 Evaluate the answer on a scale of 0-10. Return ONLY valid JSON:
@@ -26,13 +27,8 @@ export default async function handler(req, res) {
       return res.status(400).json({ error: 'Missing required fields' });
     }
 
-    // Get question details
-    const { data: question } = await supabase
-      .from('interview_questions')
-      .select('*')
-      .eq('id', questionId)
-      .single();
-
+    // Get question from static list
+    const question = questions.find(q => q.id === questionId);
     if (!question) {
       return res.status(404).json({ error: 'Question not found' });
     }
@@ -47,7 +43,8 @@ export default async function handler(req, res) {
           {
             role: 'user',
             content: `
-Question (${question.question_type}): ${question.question_text}
+Question (${question.type}): ${question.question}
+Expected keywords: ${question.expectedKeywords.join(', ')}
 Answer: ${answerText}
 Evaluate this answer.`,
           },
@@ -60,31 +57,37 @@ Evaluate this answer.`,
       const jsonMatch = responseText.match(/\{[\s\S]*\}/);
       evaluation = JSON.parse(jsonMatch ? jsonMatch[0] : responseText);
     } catch (openaiError) {
-      // Fallback: Simple scoring based on answer length
+      // Fallback: Simple scoring based on keywords and answer length
+      const keywordMatches = question.expectedKeywords.filter(kw => 
+        answerText.toLowerCase().includes(kw.toLowerCase())
+      ).length;
+      const baseScore = Math.min(10, Math.floor((keywordMatches / question.expectedKeywords.length) * 10));
+      const lengthBonus = Math.min(3, Math.floor(answerText.split(' ').length / 20));
+      
       evaluation = {
-        score: Math.min(10, Math.floor(answerText.split(' ').length / 5)),
-        technicalAccuracy: 5,
-        communication: 5,
-        problemSolving: 5,
-        feedback: 'Evaluated offline - provide more context for better scoring',
+        score: Math.min(10, baseScore + lengthBonus),
+        technicalAccuracy: baseScore,
+        communication: Math.min(10, 5 + Math.floor(answerText.length / 100)),
+        problemSolving: baseScore,
+        feedback: 'Offline evaluation - limited feedback available',
       };
     }
 
-    // Store answer
+    // Store answer (update the placeholder row created in /api/question)
     const answerId = uuidv4();
-    await supabase.from('interview_answers').insert([
-      {
-        id: answerId,
-        question_id: questionId,
-        candidate_id: candidateId,
+    await supabase
+      .from('interview_answers')
+      .update({
         answer_text: answerText,
         score: evaluation.score || 5,
         technical_accuracy: evaluation.technicalAccuracy || 5,
         communication_score: evaluation.communication || 5,
         problem_solving_score: evaluation.problemSolving || 5,
         feedback: evaluation.feedback || '',
-      },
-    ]);
+      })
+      .eq('candidate_id', candidateId)
+      .eq('question_id', questionId)
+      .eq('answer_text', null); // Update the one we created with null answer_text
 
     // Store metrics
     await supabase.from('candidate_scores').insert([
@@ -93,14 +96,14 @@ Evaluate this answer.`,
         metric: 'communication',
         score: evaluation.communication || 5,
         source: 'interview_answer',
-        reference_id: answerId,
+        reference_id: questionId,
       },
       {
         candidate_id: candidateId,
         metric: 'problem_solving',
         score: evaluation.problemSolving || 5,
         source: 'interview_answer',
-        reference_id: answerId,
+        reference_id: questionId,
       },
     ]);
 
