@@ -5,7 +5,7 @@ import useCandidateStore from '../hooks/useStore';
 
 export function ResumeUploadPage() {
   const navigate = useNavigate();
-  const { setCandidateId, setResumeData, setRole, setLoading, setError } = useCandidateStore();
+  const { setCandidateId, setResumeData, setRole, setLoading, setError, error } = useCandidateStore();
   const [formData, setFormData] = useState({ email: '', fullName: '', resume: null });
   const [progress, setProgress] = useState(0);
   const [uploading, setUploading] = useState(false);

@@ -6,7 +6,7 @@ import useCandidateStore from '../hooks/useStore';
 export function InterviewPage() {
   const navigate = useNavigate();
   const store = useCandidateStore();
-  const { candidateId, currentQuestion, currentQuestionNum, answers, setCurrentQuestion, addAnswer, setLoading, setError, setRole } = store;
+  const { candidateId, currentQuestion, currentQuestionNum, answers, error, setCurrentQuestion, addAnswer, setLoading, setError, setRole } = store;
 
   const [answer, setAnswer] = useState('');
   const [loading, setLoadingState] = useState(false);
@@ -199,8 +199,12 @@ export function InterviewPage() {
                   <p className="text-lg font-bold text-gray-900">{evaluation.communication}/10</p>
                 </div>
                 <div className="bg-gray-50 p-3 rounded-lg">
-                  <p className="text-xs text-gray-500">Technical Depth</p>
-                  <p className="text-lg font-bold text-gray-900">{evaluation.technical}/10</p>
+                  <p className="text-xs text-gray-500">Technical Accuracy</p>
+                  <p className="text-lg font-bold text-gray-900">{evaluation.technicalAccuracy}/10</p>
+                </div>
+                <div className="bg-gray-50 p-3 rounded-lg">
+                  <p className="text-xs text-gray-500">Problem Solving</p>
+                  <p className="text-lg font-bold text-gray-900">{evaluation.problemSolving}/10</p>
                 </div>
               </div>
 
@@ -214,6 +218,17 @@ export function InterviewPage() {
             </div>
           )}
         </div>
+
+        {/* Error Display */}
+        {error && (
+          <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg mb-6 flex items-start gap-3">
+            <span className="text-xl">⚠️</span>
+            <div className="flex-1">
+              <p className="font-semibold">Error</p>
+              <p className="text-sm mt-1">{error}</p>
+            </div>
+          </div>
+        )}
 
         {/* Tips */}
         <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
