@@ -6,7 +6,7 @@
   "scripts": {
     "install-frontend": "cd frontend && npm install",
     "postinstall": "cd frontend && npm install",
-    "build": "cd frontend && npx vite build",
+    "build": "cd frontend && node node_modules/vite/bin/vite.js build",
     "dev": "cd frontend && npm run dev",
     "preview": "cd frontend && npm run preview"
   },
